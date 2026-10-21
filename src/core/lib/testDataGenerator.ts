@@ -176,6 +176,12 @@ export const generateRandomScouts = async () => {
         // Generate some random predictions for this scout
         await generateRandomPredictions(name, totalPredictions);
     }
+
+    // The scout picker lists names from localStorage, not the gamification DB
+    const existing: string[] = JSON.parse(localStorage.getItem('scoutsList') || '[]');
+    const merged = Array.from(new Set([...existing, ...TEST_SCOUT_NAMES])).sort();
+    localStorage.setItem('scoutsList', JSON.stringify(merged));
+    window.dispatchEvent(new Event('scoutChanged'));
 };
 
 /**

@@ -16,6 +16,7 @@ import {
 import {
     generateRandomScouts,
     generateRandomScoutingData,
+    generateTBAAlignedScoutingData,
     resetEntireDatabase
 } from '@/core/lib/testDataGenerator';
 import { backfillAchievementsForAllScouts } from '@/core/lib/achievementUtils';
@@ -56,6 +57,25 @@ const DevUtilitiesPage: React.FC = () => {
         } catch (error) {
             console.error('Error generating match data:', error);
             showMessage('❌ Failed to generate match data', 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGenerateTBAAlignedData = async () => {
+        setLoading(true);
+        try {
+            const result = await generateTBAAlignedScoutingData(15);
+            if (result.success) {
+                showMessage(`✅ ${result.message}`, 'success');
+                toast.success(result.message);
+            } else {
+                showMessage(`⚠️ ${result.message}`, 'error');
+                toast.error(result.message);
+            }
+        } catch (error) {
+            console.error('Error generating TBA-aligned data:', error);
+            showMessage('❌ Failed to generate TBA-aligned data', 'error');
         } finally {
             setLoading(false);
         }
@@ -198,6 +218,21 @@ const DevUtilitiesPage: React.FC = () => {
                             <RefreshCw className="h-4 w-4 mr-2" />
                             {loading ? 'Generating...' : 'Generate Schema Data'}
                         </Button>
+
+                        <Button
+                            onClick={handleGenerateTBAAlignedData}
+                            disabled={loading}
+                            className="w-full"
+                            size="lg"
+                            variant="default"
+                        >
+                            <Database className="h-4 w-4 mr-2" />
+                            {loading ? 'Generating...' : 'Generate TBA Match Data'}
+                        </Button>
+
+                        <p className="text-xs text-gray-500 italic">
+                            * Creates entries for real matches at the current event (set on Game Start or Load Match Schedule).
+                        </p>
                     </CardContent>
                 </Card>
 
