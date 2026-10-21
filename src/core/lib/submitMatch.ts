@@ -19,6 +19,8 @@ interface MatchInputs {
     alliance: 'red' | 'blue';
     scoutName: string;
     startPosition?: boolean[];
+    /** Driver station, e.g. "red-2" */
+    station?: string;
 }
 
 interface SubmitOptions {
@@ -148,6 +150,7 @@ export async function submitMatchData({
                 eventKey: inputs.eventKey,
                 matchKey: matchKey,
                 allianceColor: inputs.alliance,
+                driverStation: inputs.station,
                 timestamp: Date.now(),
                 noShow: true,
                 comments: comment || 'No Show - Robot did not appear for this match',
@@ -203,6 +206,7 @@ export async function submitMatchData({
             eventKey: inputs.eventKey,
             matchKey: matchKey,
             allianceColor: inputs.alliance,
+            driverStation: inputs.station,
             timestamp: Date.now(),
             gameData: transformedGameData,
             comments: comment,
