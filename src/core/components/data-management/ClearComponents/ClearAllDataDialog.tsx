@@ -14,9 +14,7 @@ interface ClearAllDataDialogProps {
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   scoutingDataCount: number;
-  pitScoutingDataCount: number;
   scoutGameDataCount: number;
-  apiDataCount: number;
   matchDataCount: number;
 }
 
@@ -25,9 +23,7 @@ export const ClearAllDataDialog = ({
   onOpenChange,
   onConfirm,
   scoutingDataCount,
-  pitScoutingDataCount,
   scoutGameDataCount,
-  apiDataCount,
   matchDataCount,
 }: ClearAllDataDialogProps) => {
   const handleConfirm = () => {
@@ -50,15 +46,13 @@ export const ClearAllDataDialog = ({
               </p>
               <ul className="text-sm space-y-1 ml-4">
                 <li>• {scoutingDataCount} scouting entries</li>
-                <li>• {pitScoutingDataCount} pit scouting entries</li>
                 <li>• {scoutGameDataCount} scout profile entries</li>
-                <li>• {apiDataCount} API data items</li>
                 <li>• {matchDataCount} match schedule entries</li>
                 <li>• All settings and preferences</li>
                 <li>• All cached data</li>
               </ul>
               <p className="text-sm text-red-600 font-medium">
-                ⚠️ This action cannot be undone. Make sure you have backed up any important data.
+                ⚠️ This action cannot be undone. Make sure the lead scout has scanned every QR code first.
               </p>
             </div>
           </DialogDescription>

@@ -13,7 +13,7 @@ export const DeviceInfoCard = ({ playerStation }: DeviceInfoCardProps) => {
       </CardHeader>
       <CardContent className="space-y-2">
         <p className="text-sm">
-          <span className="font-medium">Player Station:</span> {convertTeamRole(playerStation)}
+          <span className="font-medium">Driver Station:</span> {playerStation ? convertTeamRole(playerStation) : "Not set"}
         </p>
         <p className="text-sm">
           <span className="font-medium">Last Updated:</span> {new Date().toLocaleDateString()}
