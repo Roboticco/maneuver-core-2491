@@ -18,8 +18,8 @@ export const GAME_SCOUT_OPTION_DEFAULTS: ScoutOptionsState = {
   [GAME_SCOUT_OPTION_KEYS.disableHubFuelScoringPopup]: false,
   [GAME_SCOUT_OPTION_KEYS.disablePassingPopup]: false,
   [GAME_SCOUT_OPTION_KEYS.disableDefensePopup]: false,
-  [GAME_SCOUT_OPTION_KEYS.disableAutoPathDrawingTapOnly]: false,
-  [GAME_SCOUT_OPTION_KEYS.disableTeleopPathDrawingTapOnly]: false,
+  [GAME_SCOUT_OPTION_KEYS.disableAutoPathDrawingTapOnly]: true,
+  [GAME_SCOUT_OPTION_KEYS.disableTeleopPathDrawingTapOnly]: true,
 };
 
 function coerceScoutOptions(value: unknown): ScoutOptionsState {
