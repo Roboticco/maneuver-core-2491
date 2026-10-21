@@ -822,7 +822,7 @@ function AutoFieldMapContent({
             inputs: location.state?.inputs,
             transformation,
             noShow: true,
-            onSuccess: () => navigate('/game-start'),
+            onSuccess: () => navigate('/match-qr'),
         });
     };
 
