@@ -30,6 +30,15 @@ import type { ScoutOptionsState } from "@/types";
 
 const SCOUT_OPTIONS_STORAGE_KEY = "scoutOptions";
 
+const STATIONS = [
+  { value: "red-1", label: "R1", color: "red" },
+  { value: "red-2", label: "R2", color: "red" },
+  { value: "red-3", label: "R3", color: "red" },
+  { value: "blue-1", label: "B1", color: "blue" },
+  { value: "blue-2", label: "B2", color: "blue" },
+  { value: "blue-3", label: "B3", color: "blue" },
+] as const;
+
 const DEFAULT_SCOUT_OPTIONS: ScoutOptionsState = {
   [CORE_SCOUT_OPTION_KEYS.placeholderOptionA]: false,
   [CORE_SCOUT_OPTION_KEYS.placeholderOptionB]: false,
@@ -41,7 +50,7 @@ const GameStartPage = () => {
   const states = location.state;
   const { ui } = useGame();
   const { getNextRoute, isConfigValid } = useWorkflowNavigation();
-  const { currentScout } = useScout();
+  const { currentScout, playerStation, setPlayerStation } = useScout();
 
   // Debug log when currentScout changes
   useEffect(() => {
@@ -59,7 +68,6 @@ const GameStartPage = () => {
   const currentTeamIndex = rescoutData?.currentTeamIndex || 0;
 
   const parsePlayerStation = () => {
-    const playerStation = localStorage.getItem("playerStation");
     if (!playerStation) return { alliance: "", teamPosition: 0 };
 
     if (playerStation === "lead") {
@@ -277,6 +285,7 @@ const GameStartPage = () => {
           selectTeam,
           eventKey,
           scoutOptions,
+          station: playerStation,
         },
         ...(isRescoutMode && {
           rescout: {
@@ -300,6 +309,17 @@ const GameStartPage = () => {
 
   const handleMatchNumberChange = (value: string) => {
     setMatchNumber(value);
+  };
+
+  useEffect(() => {
+    if (isRescoutMode || !stationInfo.alliance) return;
+    setAlliance(stationInfo.alliance);
+  }, [isRescoutMode, stationInfo.alliance]);
+
+  const handleStationChange =(station: string, color: "red" | "blue") => {
+    setPlayerStation(station);
+    setAlliance(color);
+    setSelectTeam("");
   };
 
   useEffect(() => {
@@ -410,40 +430,29 @@ const GameStartPage = () => {
               )}
             </div>
 
-            {/* Alliance Selection with Buttons */}
             <div className="space-y-2">
-              <Label>Alliance</Label>
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  variant={alliance === "red" ? "default" : "outline"}
-                  onClick={() => setAlliance("red")}
-                  disabled={isRescoutMode}
-                  className={`h-12 text-lg font-semibold ${alliance === "red"
-                    ? "bg-red-500 hover:bg-red-600 text-white"
-                    : "hover:bg-red-50 hover:text-red-600 hover:border-red-300"
-                    } ${isRescoutMode ? 'cursor-not-allowed' : ''}`}
-                >
-                  <Badge
-                    variant={alliance === "red" ? "secondary" : "destructive"}
-                    className={`w-3 h-3 p-0 mr-2 ${alliance === "red" ? "bg-white" : "bg-red-500"}`}
-                  />
-                  Red Alliance
-                </Button>
-                <Button
-                  variant={alliance === "blue" ? "default" : "outline"}
-                  onClick={() => setAlliance("blue")}
-                  disabled={isRescoutMode}
-                  className={`h-12 text-lg font-semibold ${alliance === "blue"
-                    ? "bg-blue-500 hover:bg-blue-600 text-white"
-                    : "hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
-                    } ${isRescoutMode ? 'cursor-not-allowed' : ''}`}
-                >
-                  <Badge
-                    variant={alliance === "blue" ? "secondary" : "default"}
-                    className={`w-3 h-3 p-0 mr-2 ${alliance === "blue" ? "bg-white" : "bg-blue-500"}`}
-                  />
-                  Blue Alliance
-                </Button>
+              <div className="flex items-center justify-between">
+                <Label>Driver Station</Label>
+                <span className="text-xs text-muted-foreground">Stays set between matches</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {STATIONS.map(({ value, label, color }) => {
+                  const selected = playerStation === value;
+                  const colorClasses = color === "red"
+                    ? selected ? "bg-red-500 hover:bg-red-600 text-white" : "hover:bg-red-50 hover:text-red-600 hover:border-red-300"
+                    : selected ? "bg-blue-500 hover:bg-blue-600 text-white" : "hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300";
+                  return (
+                    <Button
+                      key={value}
+                      variant={selected ? "default" : "outline"}
+                      onClick={() => handleStationChange(value, color)}
+                      disabled={isRescoutMode}
+                      className={`h-12 text-lg font-semibold ${colorClasses}`}
+                    >
+                      {label}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
 
@@ -499,6 +508,7 @@ const GameStartPage = () => {
               <Label>Team Selection</Label>
               <div className={isRescoutMode ? "opacity-50 pointer-events-none" : ""}>
                 <GameStartSelectTeam
+                  key={playerStation}
                   defaultSelectTeam={selectTeam}
                   setSelectTeam={setSelectTeam}
                   selectedMatch={debouncedMatchNumber}
