@@ -6,8 +6,7 @@
  * The Google Sheet must have matching headers for the scan-to-paste workflow.
  *
  * Approximations (marked with ~):
- * - `robot` driver station: Maneuver stores alliance color only, not station #.
- *   Output is "R1"/"B1" — scouts should note station separately if needed.
+ * - `robot` driver station: from the Game Start station picker (R1 fallback for old entries).
  * - `Auto` preloaded fuel: QRScout defaults to 8, not tracked live; hardcoded 8.
  * - Teleop shift breakdown: Maneuver counts total teleop fuel, not per-shift.
  *   Total goes in TeleTransitionScored; other shift columns output 0.
@@ -32,6 +31,13 @@ function mapStartPosition(pos: unknown): string {
     case 4: return 'Trench'; // trench2 (lower)
     default: return '';
   }
+}
+
+// "red-2" → "R2". Older entries without a station fall back to slot 1.
+function mapDriverStation(entry: ScoutingEntry): string {
+  const match = /^(red|blue)-([123])$/.exec(String(entry.driverStation ?? ''));
+  if (match) return `${match[1] === 'red' ? 'R' : 'B'}${match[2]}`;
+  return entry.allianceColor === 'red' ? 'R1' : 'B1';
 }
 
 // Map matchKey prefix to QRScout MatchType select value.
@@ -109,7 +115,7 @@ export function serializeEntryToQrString(entry: ScoutingEntry): string {
 
     // ── Prematch-2 ───────────────────────────────────────────────────────────
     entry.teamNumber as number,                        // teamNumber
-    (entry.allianceColor as string) === 'red' ? 'R1' : 'B1', // ~ robot (station unknown)
+    mapDriverStation(entry),                           // robot
     !((entry.noShow as boolean) ?? false),             // noShow → Robot Present (inverted)
     mapStartPosition(auto.startPosition),              // start
     false,                                             // broken (before match — not tracked)
