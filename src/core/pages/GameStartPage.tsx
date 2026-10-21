@@ -31,12 +31,12 @@ import type { ScoutOptionsState } from "@/types";
 const SCOUT_OPTIONS_STORAGE_KEY = "scoutOptions";
 
 const STATIONS = [
-  { value: "red-1", label: "R1", color: "red" },
-  { value: "red-2", label: "R2", color: "red" },
-  { value: "red-3", label: "R3", color: "red" },
-  { value: "blue-1", label: "B1", color: "blue" },
-  { value: "blue-2", label: "B2", color: "blue" },
-  { value: "blue-3", label: "B3", color: "blue" },
+  { value: "red-1", label: "Red 1", color: "red" },
+  { value: "red-2", label: "Red 2", color: "red" },
+  { value: "red-3", label: "Red 3", color: "red" },
+  { value: "blue-1", label: "Blue 1", color: "blue" },
+  { value: "blue-2", label: "Blue 2", color: "blue" },
+  { value: "blue-3", label: "Blue 3", color: "blue" },
 ] as const;
 
 const DEFAULT_SCOUT_OPTIONS: ScoutOptionsState = {
@@ -435,25 +435,26 @@ const GameStartPage = () => {
                 <Label>Driver Station</Label>
                 <span className="text-xs text-muted-foreground">Stays set between matches</span>
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                {STATIONS.map(({ value, label, color }) => {
-                  const selected = playerStation === value;
-                  const colorClasses = color === "red"
-                    ? selected ? "bg-red-500 hover:bg-red-600 text-white" : "hover:bg-red-50 hover:text-red-600 hover:border-red-300"
-                    : selected ? "bg-blue-500 hover:bg-blue-600 text-white" : "hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300";
-                  return (
-                    <Button
-                      key={value}
-                      variant={selected ? "default" : "outline"}
-                      onClick={() => handleStationChange(value, color)}
-                      disabled={isRescoutMode}
-                      className={`h-12 text-lg font-semibold ${colorClasses}`}
-                    >
+              <Select
+                value={STATIONS.some((s) => s.value === playerStation) ? playerStation : ""}
+                onValueChange={(value) => {
+                  const station = STATIONS.find((s) => s.value === value);
+                  if (station) handleStationChange(station.value, station.color);
+                }}
+                disabled={isRescoutMode}
+              >
+                <SelectTrigger className={`h-12 w-full text-lg font-semibold ${!playerStation ? "border-amber-500" : ""}`}>
+                  <SelectValue placeholder="Select your station" />
+                </SelectTrigger>
+                <SelectContent>
+                  {STATIONS.map(({ value, label }) => (
+                    <SelectItem key={value} value={value} className="text-base">
+                      <span className={`inline-block h-3 w-3 rounded-full ${value.startsWith("red") ? "bg-red-500" : "bg-blue-500"}`} />
                       {label}
-                    </Button>
-                  );
-                })}
-              </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Alliance Prediction Selection */}
