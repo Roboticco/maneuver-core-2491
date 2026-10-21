@@ -11,6 +11,8 @@ import { useGame } from "@/core/contexts/GameContext";
 import { useWorkflowNavigation } from "@/core/hooks/useWorkflowNavigation";
 import { submitMatchData } from "@/core/lib/submitMatch";
 import { workflowConfig } from "@/game-template/game-schema";
+import { serializeEntryToQrString } from "@/game-template/qr-export";
+import { MatchQRCode } from "@/core/components/MatchQRCode";
 
 const EndgamePage = () => {
   const { ui, transformation } = useGame();
@@ -25,6 +27,7 @@ const EndgamePage = () => {
     return saved ? JSON.parse(saved) : {};
   });
   const [comment, setComment] = useState("");
+  const [qrString, setQrString] = useState<string | null>(null);
 
   const updateRobotStatus = (updates: Partial<any>) => {
     setRobotStatus((prev: any) => {
@@ -36,14 +39,15 @@ const EndgamePage = () => {
   };
 
   const handleSubmit = async () => {
-    // Save endgame status to localStorage so submitMatch can access it
     localStorage.setItem("endgameRobotStatus", JSON.stringify(robotStatus));
 
     await submitMatchData({
       inputs: states?.inputs,
       transformation,
       comment,
-      onSuccess: () => navigate('/game-start'),
+      onSuccessWithEntry: (entry) => {
+        setQrString(serializeEntryToQrString(entry));
+      },
     });
   };
 
@@ -59,6 +63,15 @@ const EndgamePage = () => {
       },
     });
   };
+
+  if (qrString !== null) {
+    return (
+      <MatchQRCode
+        tabString={qrString}
+        onDismiss={() => navigate('/game-start')}
+      />
+    );
+  }
 
   return (
     <div className="h-full w-full flex flex-col items-center px-4 pt-12 pb-24">

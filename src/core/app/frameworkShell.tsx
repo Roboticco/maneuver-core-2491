@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
+  Navigate,
   Route,
   RouterProvider,
   createBrowserRouter,
@@ -10,7 +11,6 @@ import { ThemeProvider } from '@/core/components/theme-provider';
 import { analytics } from '@/core/lib/analytics';
 import MainLayout from '@/core/layouts/MainLayout';
 import NotFoundPage from '@/core/pages/NotFoundPage';
-import HomePage from '@/core/pages/HomePage';
 import GameStartPage from '@/core/pages/GameStartPage';
 import ClearDataPage from '@/core/pages/ClearDataPage';
 import AutoStartPage from '@/core/pages/AutoStartPage';
@@ -48,7 +48,6 @@ import type {
   ValidationRules,
 } from '@/types/game-interfaces';
 import type { MatchValidationResult, ValidationConfig } from '@/types/game-interfaces';
-import logo from '@/assets/Maneuver Wordmark Vertical.png';
 
 type FrameworkRouter = ReturnType<typeof createBrowserRouter>;
 
@@ -129,7 +128,6 @@ export const defaultFrameworkShellRuntime: FrameworkShellRuntimeOptions = {
 
 function buildFrameworkRoutes({
   gameBindings = defaultFrameworkGameBindings,
-  homePageLogo = logo,
 }: Omit<CreateFrameworkRouterOptions, 'initialEntries' | 'kind'> = {}) {
   return createRoutesFromElements(
     <Route
@@ -147,7 +145,7 @@ function buildFrameworkRoutes({
         </GameProvider>
       }
     >
-      <Route index element={<HomePage logo={homePageLogo} />} />
+      <Route index element={<Navigate to="/game-start" replace />} />
       <Route path="/game-start" element={<GameStartPage />} />
       <Route path="/auto-start" element={<AutoStartPage />} />
       <Route path="/auto-scoring" element={<AutoScoringPage />} />
