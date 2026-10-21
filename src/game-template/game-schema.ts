@@ -45,7 +45,7 @@ export interface WorkflowConfig {
 
 export const workflowConfig: WorkflowConfig = {
     pages: {
-        autoStart: false,     // Starting position selection page
+        autoStart: true,      // Starting position selection page
         autoScoring: true,    // Auto period scoring (required)
         teleopScoring: true,  // Teleop period scoring (required)
         endgame: true,        // Endgame page with status toggles & submit

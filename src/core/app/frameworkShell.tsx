@@ -17,6 +17,7 @@ import AutoStartPage from '@/core/pages/AutoStartPage';
 import AutoScoringPage from '@/core/pages/AutoScoringPage';
 import TeleopScoringPage from '@/core/pages/TeleopScoringPage';
 import EndgamePage from '@/core/pages/EndgamePage';
+import APIDataPage from '@/core/pages/APIDataPage';
 import DevUtilitiesPage from '@/core/pages/DevUtilitiesPage';
 import { InstallPrompt } from '@/core/components/pwa/InstallPrompt';
 import { PWAUpdatePrompt } from '@/core/components/pwa/PWAUpdatePrompt';
@@ -153,6 +154,7 @@ function buildFrameworkRoutes({
       <Route path="/teleop-scoring" element={<TeleopScoringPage />} />
       <Route path="/endgame" element={<EndgamePage />} />
       <Route path="/clear-data" element={<ClearDataPage />} />
+      <Route path="/api-data" element={<APIDataPage />} />
       <Route path="/dev-utilities" element={<DevUtilitiesPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>,
