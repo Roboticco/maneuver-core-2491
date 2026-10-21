@@ -17,8 +17,8 @@ export type { UniversalFountainGeneratorProps } from '../core/components/data-tr
 export { UniversalFountainScanner } from '../core/components/data-transfer/UniversalFountainScanner';
 export type { UniversalFountainScannerProps } from '../core/components/data-transfer/UniversalFountainScanner';
 
-// Dashboard Components (2025-style sidebar layout)
-export { AppSidebar as DashboardSidebar, SiteHeader } from '../core/components/dashboard';
+// Dashboard Components
+export { SiteHeader } from '../core/components/dashboard';
 
 // Sidebar UI Components
 export {

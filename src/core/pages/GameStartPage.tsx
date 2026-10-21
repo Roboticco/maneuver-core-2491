@@ -322,7 +322,7 @@ const GameStartPage = () => {
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-orange-500" />
                 <span className="text-sm text-amber-700">
-                  Please select a scout from the sidebar before starting
+                  Tap "Select Scout" at the top before starting
                 </span>
               </div>
             </CardContent>
