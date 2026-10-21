@@ -106,7 +106,7 @@ const AutoStartPage = () => {
       const success = await submitMatchData({
         inputs: updatedInputs,
         transformation,
-        onSuccess: () => navigate('/game-start'),
+        onSuccess: () => navigate('/match-qr'),
       });
       if (!success) return;
     } else {
@@ -132,7 +132,7 @@ const AutoStartPage = () => {
       inputs: updatedInputs,
       transformation,
       noShow: true,
-      onSuccess: () => navigate('/game-start'),
+      onSuccess: () => navigate('/match-qr'),
     });
 
     if (success) {

@@ -105,7 +105,7 @@ const TeleopScoringPage = () => {
       const success = await submitMatchData({
         inputs: states?.inputs,
         transformation,
-        onSuccess: () => navigate('/game-start'),
+        onSuccess: () => navigate('/match-qr'),
       });
       if (!success) return;
     } else {

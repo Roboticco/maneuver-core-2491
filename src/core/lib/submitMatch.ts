@@ -39,8 +39,6 @@ interface SubmitOptions {
     noShow?: boolean;
     /** Callback on successful submission */
     onSuccess?: () => void;
-    /** Callback on successful submission, receives the saved entry */
-    onSuccessWithEntry?: (entry: Record<string, unknown>) => void;
     /** Callback on error */
     onError?: (error: Error) => void;
 }
@@ -115,7 +113,6 @@ export async function submitMatchData({
     comment = '',
     noShow = false,
     onSuccess,
-    onSuccessWithEntry,
     onError,
 }: SubmitOptions): Promise<boolean> {
     const maybeRecordCommentAchievement = async (existingComment?: unknown) => {
@@ -173,7 +170,6 @@ export async function submitMatchData({
             clearScoutingLocalStorage();
             advanceStoredMatchNumber(inputs.matchNumber);
             await pruneOldEntries();
-            onSuccessWithEntry?.(entry);
             if (onSuccess) {
                 onSuccess();
             }
@@ -230,7 +226,6 @@ export async function submitMatchData({
         await pruneOldEntries();
 
         toast.success('Match data saved successfully!');
-        onSuccessWithEntry?.(scoutingEntry);
         onSuccess?.();
         return true;
     } catch (error) {
