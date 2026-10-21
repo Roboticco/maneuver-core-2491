@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Binoculars, CalendarDays,Moon, MoreVertical, Trash2, Wrench } from "lucide-react";
+import { Binoculars, CalendarDays, Moon, MoreVertical, QrCode, Trash2, Wrench } from "lucide-react";
 import { Button } from "@/core/components/ui/button";
 import {
   DropdownMenu,
@@ -40,6 +40,10 @@ export function SiteHeader() {
             <DropdownMenuItem onClick={() => navigate("/api-data")}>
               <CalendarDays className="size-4" />
               Load Match Schedule
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/match-qr")}>
+              <QrCode className="size-4" />
+              Recent QR Codes
             </DropdownMenuItem>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
