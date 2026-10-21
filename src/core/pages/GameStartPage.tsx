@@ -21,9 +21,10 @@ import {
   ScoutOptionsSheet,
 } from "@/core/components/GameStartComponents/ScoutOptionsSheet";
 import { createMatchPrediction, getPredictionForMatch } from "@/core/lib/scoutGamificationUtils";
-import { AlertTriangle, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { useWorkflowNavigation } from "@/core/hooks/useWorkflowNavigation";
 import { useScout } from "@/core/contexts/ScoutContext";
+import { ScoutPicker } from "@/core/components/dashboard/ScoutPicker";
 import { useGame } from "@/core/contexts/GameContext";
 import type { ScoutOptionsState } from "@/types";
 
@@ -316,19 +317,6 @@ const GameStartPage = () => {
       </div>
       <div className="flex flex-col items-center gap-6 max-w-2xl w-full flex-1 pb-8 md:pb-4">
 
-        {!currentScout && (
-          <Card className="w-full border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20">
-            <CardContent>
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-orange-500" />
-                <span className="text-sm text-amber-700">
-                  Tap "Select Scout" at the top before starting
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Re-scout mode banner */}
         {isRescoutMode && (
           <Alert className="flex border-amber-500 bg-amber-50 dark:bg-amber-950/20 py-3">
@@ -350,21 +338,16 @@ const GameStartPage = () => {
         <Card className="w-full">
           <CardHeader>
             <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <CardTitle className="text-xl">Match Information</CardTitle>
-                {currentScout && (
-                  <p className="text-sm text-muted-foreground">
-                    Scouting as:{" "}
-                    <span className="font-medium">{currentScout}</span>
-                  </p>
-                )}
-              </div>
-
+              <CardTitle className="text-xl">Match Information</CardTitle>
               <ScoutOptionsSheet
                 options={scoutOptions}
                 onOptionChange={handleScoutOptionChange}
                 customContent={ui.ScoutOptionsContent}
               />
+            </div>
+            <div className="space-y-2 pt-2">
+              <Label>Scouting as</Label>
+              <ScoutPicker />
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
