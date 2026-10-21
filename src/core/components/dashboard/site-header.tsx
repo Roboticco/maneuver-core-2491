@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { CalendarDays, Moon, MoreVertical, Trash2, Wrench } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Binoculars, CalendarDays,Moon, MoreVertical, Trash2, Wrench } from "lucide-react";
 import { Button } from "@/core/components/ui/button";
 import {
   DropdownMenu,
@@ -20,7 +20,14 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 flex h-(--header-height) items-center gap-2 border-b bg-popover/95 px-4 py-2 backdrop-blur-sm">
-      {/* Left side reserved for site name / logo */}
+      {/* Swap the icon + text for a logo later */}
+      <Link
+        to="/game-start"
+        className="flex items-center gap-2 rounded-md px-2 py-1 font-semibold hover:bg-accent"
+      >
+        <Binoculars className="size-5" />
+        Scout
+      </Link>
       <div className="ml-auto flex items-center gap-1">
         <PageHelpTooltip />
         <DropdownMenu>
