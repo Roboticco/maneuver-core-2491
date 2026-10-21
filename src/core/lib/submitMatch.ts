@@ -37,6 +37,8 @@ interface SubmitOptions {
     noShow?: boolean;
     /** Callback on successful submission */
     onSuccess?: () => void;
+    /** Callback on successful submission, receives the saved entry */
+    onSuccessWithEntry?: (entry: Record<string, unknown>) => void;
     /** Callback on error */
     onError?: (error: Error) => void;
 }
@@ -98,12 +100,20 @@ function advanceStoredMatchNumber(submittedMatchNumber: string): void {
  * 
  * @param options.noShow - If true, submits a minimal entry with noShow flag and skips data collection
  */
+async function pruneOldEntries(): Promise<void> {
+    const count = await db.scoutingData.count();
+    if (count <= 10) return;
+    const oldest = await db.scoutingData.orderBy('timestamp').limit(count - 10).primaryKeys();
+    await db.scoutingData.bulkDelete(oldest as string[]);
+}
+
 export async function submitMatchData({
     inputs,
     transformation,
     comment = '',
     noShow = false,
     onSuccess,
+    onSuccessWithEntry,
     onError,
 }: SubmitOptions): Promise<boolean> {
     const maybeRecordCommentAchievement = async (existingComment?: unknown) => {
@@ -159,7 +169,8 @@ export async function submitMatchData({
             toast.success('No-show match submitted');
             clearScoutingLocalStorage();
             advanceStoredMatchNumber(inputs.matchNumber);
-            
+            await pruneOldEntries();
+            onSuccessWithEntry?.(entry);
             if (onSuccess) {
                 onSuccess();
             }
@@ -212,7 +223,10 @@ export async function submitMatchData({
         // Update match counter
         advanceStoredMatchNumber(inputs.matchNumber);
 
+        await pruneOldEntries();
+
         toast.success('Match data saved successfully!');
+        onSuccessWithEntry?.(scoutingEntry);
         onSuccess?.();
         return true;
     } catch (error) {
