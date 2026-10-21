@@ -16,11 +16,10 @@ import {
 import {
     generateRandomScouts,
     generateRandomScoutingData,
-    generateTBAAlignedScoutingData,
     resetEntireDatabase
 } from '@/core/lib/testDataGenerator';
 import { backfillAchievementsForAllScouts } from '@/core/lib/achievementUtils';
-import { getAllScouts } from '@/db';
+import { db, getAllScouts } from '@/db';
 import { toast } from 'sonner';
 
 const DevUtilitiesPage: React.FC = () => {
@@ -62,25 +61,6 @@ const DevUtilitiesPage: React.FC = () => {
         }
     };
 
-    const handleGenerateTBAAlignedData = async () => {
-        setLoading(true);
-        try {
-            const result = await generateTBAAlignedScoutingData(15);
-            if (result.success) {
-                showMessage(`✅ ${result.message}`, 'success');
-                toast.success(result.message);
-            } else {
-                showMessage(`⚠️ ${result.message}`, 'error');
-                toast.error(result.message);
-            }
-        } catch (error) {
-            console.error('Error generating TBA-aligned data:', error);
-            showMessage('❌ Failed to generate TBA-aligned data', 'error');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleClearData = async () => {
         if (!confirm('Are you absolutely sure? This will wipe ALL databases including scouting data, pits, and profiles.')) {
             return;
@@ -116,8 +96,8 @@ const DevUtilitiesPage: React.FC = () => {
     const handleCheckCurrentData = async () => {
         setLoading(true);
         try {
-            const scouts = await getAllScouts();
-            showMessage(`📊 Current database has ${scouts.length} scouts`, 'info');
+            const [scouts, matchCount] = await Promise.all([getAllScouts(), db.scoutingData.count()]);
+            showMessage(`📊 Current database has ${matchCount} scouted matches and ${scouts.length} scouts`, 'info');
         } catch (error) {
             console.error('Error checking data:', error);
             showMessage('❌ Failed to check current data', 'error');
@@ -218,21 +198,6 @@ const DevUtilitiesPage: React.FC = () => {
                             <RefreshCw className="h-4 w-4 mr-2" />
                             {loading ? 'Generating...' : 'Generate Schema Data'}
                         </Button>
-
-                        <Button
-                            onClick={handleGenerateTBAAlignedData}
-                            disabled={loading}
-                            className="w-full"
-                            size="lg"
-                            variant="default"
-                        >
-                            <Database className="h-4 w-4 mr-2" />
-                            {loading ? 'Generating...' : 'Generate TBA Match Data'}
-                        </Button>
-
-                        <p className="text-xs text-gray-500 italic">
-                            * TBA Match Data uses current event to create scouting entries for real matches (for validation testing).
-                        </p>
                     </CardContent>
                 </Card>
 
