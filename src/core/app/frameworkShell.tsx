@@ -17,20 +17,7 @@ import AutoStartPage from '@/core/pages/AutoStartPage';
 import AutoScoringPage from '@/core/pages/AutoScoringPage';
 import TeleopScoringPage from '@/core/pages/TeleopScoringPage';
 import EndgamePage from '@/core/pages/EndgamePage';
-import { PitScoutingPage } from '@/core/pages/PitScoutingPage';
-import APIDataPage from '@/core/pages/APIDataPage';
-import JSONDataTransferPage from '@/core/pages/JSONDataTransferPage';
-import PeerTransferPage from '@/core/pages/PeerTransferPage';
-import QRDataTransferPage from '@/core/pages/QRDataTransferPage';
-import TeamStatsPage from '@/core/pages/TeamStatsPage';
-import StrategyOverviewPage from '@/core/pages/StrategyOverviewPage';
-import MatchStrategyPage from '@/core/pages/MatchStrategyPage';
-import PickListPage from '@/core/pages/PickListPage';
-import ScoutManagementDashboardPage from '@/core/pages/ScoutManagementDashboardPage';
-import AchievementsPage from '@/core/pages/AchievementsPage';
 import DevUtilitiesPage from '@/core/pages/DevUtilitiesPage';
-import { MatchValidationPage } from '@/core/pages/MatchValidationPage';
-import PitAssignmentsPage from '@/core/pages/PitAssignmentsPage';
 import { InstallPrompt } from '@/core/components/pwa/InstallPrompt';
 import { PWAUpdatePrompt } from '@/core/components/pwa/PWAUpdatePrompt';
 import { StatusBarSpacer } from '@/core/components/StatusBarSpacer';
@@ -166,19 +153,6 @@ function buildFrameworkRoutes({
       <Route path="/teleop-scoring" element={<TeleopScoringPage />} />
       <Route path="/endgame" element={<EndgamePage />} />
       <Route path="/clear-data" element={<ClearDataPage />} />
-      <Route path="/pit-scouting" element={<PitScoutingPage />} />
-      <Route path="/api-data" element={<APIDataPage />} />
-      <Route path="/json-transfer" element={<JSONDataTransferPage />} />
-      <Route path="/peer-transfer" element={<PeerTransferPage />} />
-      <Route path="/qr-transfer" element={<QRDataTransferPage />} />
-      <Route path="/team-stats" element={<TeamStatsPage />} />
-      <Route path="/strategy-overview" element={<StrategyOverviewPage />} />
-      <Route path="/match-strategy" element={<MatchStrategyPage />} />
-      <Route path="/pick-list" element={<PickListPage />} />
-      <Route path="/scout-management" element={<ScoutManagementDashboardPage />} />
-      <Route path="/pit-assignments" element={<PitAssignmentsPage />} />
-      <Route path="/achievements" element={<AchievementsPage />} />
-      <Route path="/match-validation" element={<MatchValidationPage />} />
       <Route path="/dev-utilities" element={<DevUtilitiesPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>,
