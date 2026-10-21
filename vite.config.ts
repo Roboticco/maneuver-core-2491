@@ -1,13 +1,47 @@
 import path from "path"
 import tailwindcss from "@tailwindcss/vite"
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from "vite-plugin-pwa";
+import { handler as apiProxyHandler } from './netlify/functions/api-proxy'
+
+// Serves the Netlify api-proxy function under plain `vite`, so TBA loading works without `netlify dev`.
+function netlifyApiProxyDev(): Plugin {
+  return {
+    name: 'netlify-api-proxy-dev',
+    apply: 'serve',
+    configureServer(server) {
+      const env = loadEnv(server.config.mode, process.cwd(), '');
+      for (const [key, value] of Object.entries(env)) {
+        process.env[key] ??= value;
+      }
+
+      server.middlewares.use('/.netlify/functions/api-proxy', async (req, res) => {
+        const url = new URL(req.url ?? '', 'http://localhost');
+        const result = await apiProxyHandler(
+          {
+            httpMethod: req.method ?? 'GET',
+            headers: req.headers as Record<string, string>,
+            queryStringParameters: Object.fromEntries(url.searchParams),
+          } as never,
+          {} as never,
+        );
+        const response = result ?? { statusCode: 500, headers: {}, body: '{}' };
+        res.statusCode = response.statusCode;
+        for (const [name, value] of Object.entries(response.headers ?? {})) {
+          res.setHeader(name, String(value));
+        }
+        res.end(response.body ?? '');
+      });
+    },
+  };
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
+    netlifyApiProxyDev(),
     tailwindcss(),
     VitePWA({
       registerType: "prompt",
